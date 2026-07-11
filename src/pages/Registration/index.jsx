@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
-import { registration } from "../../rtk/slices/tasksSlice";
+import { registration } from "../../rtk/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { localStorageHelpers } from "../../helpers/localStorageHelpers";
+import { deleteErrors } from "../../rtk/slices/userSlice";
 
 const Registration = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,9 @@ const Registration = () => {
         {errors && errors.map((item) => <p>{item}</p>)}
       </div>
 
-      <Link to="/login">Залогиниться</Link>
+      <Link to="/login" onClick={dispatch(deleteErrors())}>
+        Залогиниться
+      </Link>
     </>
   );
 };

@@ -1,58 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { localStorageHelpers } from "../../helpers/localStorageHelpers";
 
-export const registration = createAsyncThunk(
-  "tasks/registration",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (data.error) {
-        return thunkAPI.rejectWithValue(data);
-      }
-      return thunkAPI.fulfillWithValue(data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
-export const login = createAsyncThunk(
-  "tasks/login",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-      const data = await response.json();
-      return thunkAPI.fulfillWithValue(data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
 export const getTasks = createAsyncThunk(
   "tasks/getTasks",
   async (_, thunkAPI) => {
@@ -225,19 +173,6 @@ const tasksSlice = createSlice({
         state.loading = false;
         state.value = action.payload.data;
       })
-      .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        localStorageHelpers.set(action.payload["access_token"]);
-      })
-      .addCase(registration.fulfilled, (state, action) => {
-        state.loading = false;
-        localStorageHelpers.set(action.payload["access_token"]);
-      })
-      .addCase(registration.rejected, (state, action) => {
-        state.loading = false;
-        state.errors = action.payload.message;
-        console.log(state.errors);
-      })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {
@@ -248,7 +183,7 @@ const tasksSlice = createSlice({
         (action) => action.type.endsWith("/rejected"),
         (state, action) => {
           state.loading = false;
-          // state.errors = action.payload.message;
+          state.errors = action.payload.message;
         }
       );
   },

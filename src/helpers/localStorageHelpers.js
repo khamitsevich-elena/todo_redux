@@ -1,7 +1,9 @@
+const TOKEN = "token";
 const localStorageHelpers = {
-  get: () => localStorage.getItem("token"),
-  set: (data) => localStorage.setItem("token", data),
-  delete: () => localStorage.removeItem("token"),
+  get: () => localStorage.getItem(TOKEN),
+  set: (data) => localStorage.setItem(TOKEN, data),
+  delete: () => localStorage.removeItem(TOKEN),
+  isAuthorized: () => !!localStorageHelpers.get(),
 };
 
 export { localStorageHelpers };

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
-import { login } from "../../rtk/slices/tasksSlice";
+import { login } from "../../rtk/slices/userSlice";
 import { localStorageHelpers } from "../../helpers/localStorageHelpers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteErrors } from "../../rtk/slices/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const errors = useSelector((store) => store.tasks.errors);
   const [data, setData] = useState({});
   const navigate = useNavigate();
   const linkTotask = () => {
@@ -26,7 +28,14 @@ const Login = () => {
       <input name="email" placeholder="email" onChange={(e) => func(e)} />
       <input name="password" placeholder="password" onChange={(e) => func(e)} />
       <button onClick={submitLogin}>Submit</button>
-      <Link to="/registration">Регистрация</Link>
+      <div style={{ color: "red" }}>
+        {errors && Array.isArray(errors)
+          ? errors.map((item) => <p>{item}</p>)
+          : errors}
+      </div>
+      <Link onClick={dispatch(deleteErrors())} to="/registration">
+        Регистрация
+      </Link>
     </>
   );
 };

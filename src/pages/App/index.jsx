@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./styles.css";
 import Registration from "../Registration";
 import Login from "../Login";
-import { Routes, Route, Link, useNavigate } from "react-router";
+import { Routes, Route, Navigate, useNavigate } from "react-router";
 import PrivateRoute from "../../components/PrivateRoute";
 import FilteredTodos from "../../components/FilteredTodos";
 import { localStorageHelpers } from "../../helpers/localStorageHelpers";
@@ -27,11 +27,10 @@ function App() {
         <Route
           path="/"
           element={
-            <>
-              {" "}
-              <Link to="/registration">Регистрация</Link>
-              <Link to="/login">Вход</Link>
-            </>
+            <Navigate
+              to={localStorageHelpers.isAuthorized() ? "/Tasks" : "/login"}
+              replace
+            />
           }
         />
         <Route path="/registration" element={<Registration />} />
