@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs } from "antd";
-import Todo from "../Todos";
+import Todo from "../Todo";
 import { useSearchParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { filterTasks } from "../../rtk/slices/tasksSlice";

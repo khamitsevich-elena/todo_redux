@@ -7,7 +7,7 @@ import { deleteErrors } from "../../rtk/slices/userSlice";
 
 const Registration = () => {
   const dispatch = useDispatch();
-  const errors = useSelector((store) => store.tasks.errors);
+  const errors = useSelector((store) => store.user.errors);
   const [data, setData] = useState({});
   const navigate = useNavigate();
   const linkToEnter = () => {
@@ -35,7 +35,7 @@ const Registration = () => {
         {errors && errors.map((item) => <p>{item}</p>)}
       </div>
 
-      <Link to="/login" onClick={dispatch(deleteErrors())}>
+      <Link to="/login" onClick={() => dispatch(deleteErrors)}>
         Залогиниться
       </Link>
     </>

@@ -8,7 +8,7 @@ import { deleteErrors } from "../../rtk/slices/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const errors = useSelector((store) => store.tasks.errors);
+  const errors = useSelector((store) => store.user.errors);
   const [data, setData] = useState({});
   const navigate = useNavigate();
   const linkTotask = () => {
@@ -21,6 +21,7 @@ const Login = () => {
     await dispatch(login(data)).unwrap();
     if (localStorageHelpers.get()) {
       linkTotask();
+      dispatch(deleteErrors());
     }
   };
   return (
@@ -33,7 +34,7 @@ const Login = () => {
           ? errors.map((item) => <p>{item}</p>)
           : errors}
       </div>
-      <Link onClick={dispatch(deleteErrors())} to="/registration">
+      <Link onClick={() => dispatch(deleteErrors)} to="/registration">
         Регистрация
       </Link>
     </>

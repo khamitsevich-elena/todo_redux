@@ -69,17 +69,19 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        localStorageHelpers.set(action.payload["access_token"]);
+      })
+      .addCase(registration.fulfilled, (state, action) => {
+        state.loading = false;
+        localStorageHelpers.set(action.payload["access_token"]);
+      })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {
           state.loading = true;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/fulfilled"),
-        (state, action) => {
-          state.loading = false;
-          localStorageHelpers.set(action.payload["access_token"]);
         }
       )
       .addMatcher(
