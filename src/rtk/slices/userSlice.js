@@ -31,7 +31,7 @@ export const login = createAsyncThunk(
   "user/login",
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/login`, {
         method: "POST",
         headers: {
           accept: "application/json",
