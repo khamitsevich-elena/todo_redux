@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { localStorageHelpers } from "../../helpers/localStorageHelpers";
 
 export const getTasks = createAsyncThunk(
   "tasks/getTasks",
   async (_, thunkAPI) => {
     if (localStorageHelpers.get()) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_URL}/todos`, {
+        const response = await fetch(`${import.meta.env.VITE_URL}/tasks`, {
           method: "GET",
           headers: {
             accept: "application/json",
@@ -19,14 +18,14 @@ export const getTasks = createAsyncThunk(
         return thunkAPI.rejectWithValue(error);
       }
     }
-  }
+  },
 );
 
 export const deleteTask = createAsyncThunk(
   "tasks/deleteTask",
   async (id, thunkAPI) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/todos/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/tasks/${id}`, {
         method: "DELETE",
         headers: {
           accept: "*/*",
@@ -37,14 +36,14 @@ export const deleteTask = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const createTasks = createAsyncThunk(
   "tasks/createTasks",
   async (task, thunkAPI) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/todos`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/tasks`, {
         method: "POST",
         headers: {
           accept: "application/json",
@@ -58,14 +57,14 @@ export const createTasks = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const editTasks = createAsyncThunk(
   "tasks/editTasks",
   async ({ id, editTask }, thunkAPI) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/todos/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/tasks/${id}`, {
         method: "PATCH",
         headers: {
           accept: "*/*",
@@ -79,14 +78,14 @@ export const editTasks = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const doneTasks = createAsyncThunk(
   "tasks/doneTasks",
   async ({ e, id }, thunkAPI) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_URL}/todos/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_URL}/tasks/${id}`, {
         method: "PATCH",
         headers: {
           accept: "application/json",
@@ -102,22 +101,23 @@ export const doneTasks = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
+
 export const filterTasks = createAsyncThunk(
   "tasks/filterTasks",
   async (filter, thunkAPI) => {
     if (localStorageHelpers.get()) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_URL}/todos${filter}`,
+          `${import.meta.env.VITE_URL}/tasks${filter}`,
           {
             method: "GET",
             headers: {
               accept: "application/json",
               Authorization: `Bearer ${localStorageHelpers.get()}`,
             },
-          }
+          },
         );
         const todos = await response.json();
         return thunkAPI.fulfillWithValue(todos);
@@ -125,7 +125,7 @@ export const filterTasks = createAsyncThunk(
         return thunkAPI.rejectWithValue(error);
       }
     }
-  }
+  },
 );
 
 const tasksSlice = createSlice({
@@ -158,7 +158,7 @@ const tasksSlice = createSlice({
       .addCase(editTasks.fulfilled, (state, action) => {
         state.loading = false;
         state.value = state.value.map((item) =>
-          item.id != action.payload.id ? item : action.payload.editTask
+          item.id != action.payload.id ? item : action.payload.editTask,
         );
       })
       .addCase(doneTasks.fulfilled, (state, action) => {
@@ -166,7 +166,7 @@ const tasksSlice = createSlice({
         state.value = state.value.map((item) =>
           item.id != action.payload
             ? item
-            : { ...item, completed: !item.completed }
+            : { ...item, completed: !item.completed },
         );
       })
       .addCase(filterTasks.fulfilled, (state, action) => {
@@ -177,14 +177,14 @@ const tasksSlice = createSlice({
         (action) => action.type.endsWith("/pending"),
         (state) => {
           state.loading = true;
-        }
+        },
       )
       .addMatcher(
         (action) => action.type.endsWith("/rejected"),
         (state, action) => {
           state.loading = false;
           state.errors = action.payload.message;
-        }
+        },
       );
   },
 });

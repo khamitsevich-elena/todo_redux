@@ -5,20 +5,17 @@ export const registration = createAsyncThunk(
   "user/registration",
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_URL}/register`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
       const data = await response.json();
       if (data.error) {
         return thunkAPI.rejectWithValue(data);
@@ -27,7 +24,7 @@ export const registration = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const login = createAsyncThunk(
@@ -53,7 +50,7 @@ export const login = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  }
+  },
 );
 
 const userSlice = createSlice({
@@ -82,7 +79,7 @@ const userSlice = createSlice({
         (action) => action.type.endsWith("/pending"),
         (state) => {
           state.loading = true;
-        }
+        },
       )
       .addMatcher(
         (action) => action.type.endsWith("/rejected"),
@@ -90,7 +87,7 @@ const userSlice = createSlice({
           state.loading = false;
           state.errors = action.payload.message;
           console.log(state.errors);
-        }
+        },
       );
   },
 });
